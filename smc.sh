@@ -4,7 +4,8 @@ CMD=$1
 
 # usage
 USAGE="Usage:
-    $0 check"
+    $0 check
+    $0 load"
 
 # check if smc support is in the kernel
 function check_kernel {
@@ -19,10 +20,23 @@ function check_kernel {
 	fi
 }
 
+# load the smc kernel module
+function load_module {
+	echo -n "Loading SMC kernel module: "
+	if modprobe smc; then
+		echo "ok."
+	else
+		echo "failed."
+	fi
+}
+
 # run commands with other command line arguments
 case "$CMD" in
 	"check")
 		check_kernel
+		;;
+	"load")
+		load_module
 		;;
 	*)
 		echo "$USAGE"
