@@ -51,7 +51,7 @@ def server(host, port):
     with socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC) as sock:
         sock.bind((host, port))
         sock.listen(1)
-        conn, addr = sock.caccept()
+        conn, addr = sock.accept()
         with conn:
             print("Connected: ", addr)
             while True:
@@ -77,7 +77,7 @@ def client(host, port):
     print("Starting SMC client")
     with socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC) as sock:
         sock.connect((host, port))
-        sock.sendall(b'Hello, world')
+        sock.sendall(b"Hello, world")
         data = sock.recv(1024)
         print('Received:', repr(data))
 
