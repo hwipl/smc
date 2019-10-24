@@ -2,8 +2,8 @@
 
 ## C
 
-See `csmc.c` for a C program that runs a client or server with an AF\_SMC
-socket.
+See [csmc.c](csmc.c) for a C program that runs a client or server with an
+AF\_SMC socket.
 
 SMC protocol definitions:
 
@@ -78,8 +78,8 @@ Read 12 bytes from server: Hello, world
 
 ## Python
 
-See `pysmc.py` for a Python script that runs a client or server with an AF\_SMC
-socket.
+See [pysmc.py](pysmc.py) for a Python script that runs a client or server with
+an AF\_SMC socket.
 
 SMC protocol definitions:
 
