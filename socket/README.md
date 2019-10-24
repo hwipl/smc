@@ -78,8 +78,8 @@ Read 12 bytes from server: Hello, world
 
 ## Python
 
-See `pysmc.py` for a **not working** Python script that runs a client or server
-with an AF\_SMC socket.
+See `pysmc.py` for a Python script that runs a client or server with an AF\_SMC
+socket.
 
 SMC protocol definitions:
 
@@ -89,15 +89,90 @@ SMCPROTO_SMC = 0
 SMCPROTO_SMC6 = 1
 ```
 
+The calls to the socket module's `bind()`, `accept()`, and `connect()` raise
+the error `OSError: getsockaddrarg: bad family` because the internal
+`getsockaddrarg()` function in Python's socket module cannot construct the
+socket address for an unknown address family, i.e., AF\_SMC. As a workaround,
+the functions in Libc can be used in Python.
+
+Libc version of `bind()`, `accept()`, and `connect()` with the socket address
+structure used by these functions:
+
+```python
+# libc
+LIBC_PATH = ctypes.util.find_library("c")
+LIBC = ctypes.CDLL(LIBC_PATH)
+
+
+class SockaddrIn(ctypes.Structure):
+    """
+    Socket Address for IPv4 struct for ctypes
+    """
+    _fields_ = [("sin_family", ctypes.c_ushort),
+                ("sin_port", ctypes.c_uint16),
+                ("sin_addr", ctypes.c_uint32),
+                ("sin_zero", ctypes.c_ubyte * 8)]
+
+    def __init__(self, address=0, port=0):
+        super(SockaddrIn, self).__init__()
+        self.sin_family = ctypes.c_ushort(socket.AF_INET)
+        self.sin_port = ctypes.c_uint16(socket.htons(int(port)))
+        self.sin_addr = ctypes.c_uint32(socket.htonl(int(
+            ipaddress.IPv4Address(address))))
+
+    def __len__(self):
+        return ctypes.sizeof(self)
+
+    def __repr__(self):
+        addr = ipaddress.IPv4Address(socket.ntohl(self.sin_addr))
+        port = socket.ntohs(self.sin_port)
+        return f"{addr}:{port}"
+
+
+def bind(sock, address, port):
+    """
+    bind() using libc with ctypes
+    """
+
+    # bind address and port
+    sockaddr = SockaddrIn(address, port)
+    LIBC.bind(sock.fileno(), ctypes.byref(sockaddr), len(sockaddr))
+
+
+def accept(sock):
+    """
+    accept() using libc with ctypes
+    """
+
+    # accept connection
+    sockaddr = SockaddrIn()
+    sockaddr_len = ctypes.c_int(len(sockaddr))
+    client_sock = LIBC.accept(sock.fileno(), ctypes.byref(sockaddr),
+                              ctypes.byref(sockaddr_len))
+    return socket.socket(fileno=client_sock), sockaddr
+
+
+def connect(sock, address, port):
+    """
+    connect() using libc with ctypes
+    """
+
+    # connect to server
+    sockaddr = SockaddrIn(address, port)
+    LIBC.connect(sock.fileno(), ctypes.byref(sockaddr), len(sockaddr))
+```
+
 Server socket code:
 
 ```python
 with socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC) as sock:
-    sock.bind((host, port))
+    # sock.bind() does not work with SMC, use libc version
+    bind(sock, host, port)
     sock.listen(1)
-    conn, addr = sock.accept()
+    # sock.accept() does not work with SMC, use libc version
+    conn, addr = accept(sock)
     with conn:
-        print("Connected: ", addr)
+        print("Connected:", addr)
         while True:
             data = conn.recv(1024)
             if not data:
@@ -109,7 +184,8 @@ Client socket code:
 
 ```python
 with socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC) as sock:
-    sock.connect((host, port))
+    # sock.connect() does not work with SMC, use libc version
+    connect(sock, host, port)
     sock.sendall(b"Hello, world")
     data = sock.recv(1024)
     print('Received:', repr(data))
@@ -118,19 +194,13 @@ with socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC) as sock:
 Running the code:
 
 ```console
-$ ./pysmc.py --server
-[...]
-  File "./pysmc.py", line 52, in server
-    sock.bind((host, port))
-OSError: getsockaddrarg: bad family
-$ ./pysmc.py --client
-[...]
-  File "./pysmc.py", line 79, in client
-    sock.connect((host, port))
-OSError: getsockaddrarg: bad family
+$ ./pysmc.py -s
+Starting SMC server
+Connected: 127.0.0.1:47090
 ```
 
-The calls to `bind()` and `connect()` raise the error `OSError: getsockaddrarg:
-bad family` because the internal `getsockaddrarg()` function in Python's socket
-module cannot construct the socket address for an unknown address family, i.e.,
-AF\_SMC.
+```console
+$ ./pysmc.py -c -a 127.0.0.1
+Starting SMC client
+Received: b'Hello, world'
+```
