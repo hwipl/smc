@@ -26,43 +26,86 @@ const (
 	SMCProtoIPv6 = 1
 )
 
-// run as a server
-func runServer(address string, port int) {
+// SMC version of Listen()
+func smcListen(address string, port int) (net.Listener, error) {
+	var l net.Listener
+	var err error
+
 	// create socket
 	fd, err := unix.Socket(unix.AF_SMC, unix.SOCK_STREAM, SMCProtoIPv4)
 	if err != nil {
-		log.Fatal(err)
+		return l, err
 	}
+	defer unix.Close(fd)
 
 	// construct socket address
 	sockaddr := &unix.SockaddrInet4{}
 	sockaddr.Port = port
 	ip := net.ParseIP(address).To4()
 	if ip == nil {
-		log.Fatal("Error parsing IP")
+		return l, fmt.Errorf("Error parsing IP")
 	}
 	copy(sockaddr.Addr[:], ip[0:4])
 
 	// bind socket address
 	err = unix.Bind(fd, sockaddr)
 	if err != nil {
-		log.Fatal(err)
+		return l, err
 	}
 
 	// start listening
 	err = unix.Listen(fd, 1)
 	if err != nil {
-		log.Fatal(err)
+		return l, err
 	}
 
 	// create a listener from listening socket
 	file := os.NewFile(uintptr(fd), "")
-	l, err := net.FileListener(file)
+	l, err = net.FileListener(file)
+	return l, err
+}
+
+// SMC version of Dial()
+func smcDial(address string, port int) (net.Conn, error) {
+	var conn net.Conn
+	var err error
+
+	// create socket
+	fd, err := unix.Socket(unix.AF_SMC, unix.SOCK_STREAM, SMCProtoIPv4)
+	if err != nil {
+		return conn, err
+	}
+	defer unix.Close(fd)
+
+	// construct socket address
+	sockaddr := &unix.SockaddrInet4{}
+	sockaddr.Port = port
+	ip := net.ParseIP(address).To4()
+	if ip == nil {
+		return conn, fmt.Errorf("Error parsing IP")
+	}
+	copy(sockaddr.Addr[:], ip[0:4])
+
+	// connect to server
+	err = unix.Connect(fd, sockaddr)
+	if err != nil {
+		return conn, err
+	}
+
+	// create a connection from connected socket
+	file := os.NewFile(uintptr(fd), "")
+	conn, err = net.FileConn(file)
+	return conn, err
+}
+
+// run as a server
+func runServer(address string, port int) {
+	// listen for smc connections
+	l, err := smcListen(address, port)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer l.Close()
-	defer unix.Close(fd)
 
 	// accept new connections from listener and handle them
 	for {
@@ -87,36 +130,13 @@ func runServer(address string, port int) {
 
 // run as a client
 func runClient(address string, port int) {
-	// create socket
-	fd, err := unix.Socket(unix.AF_SMC, unix.SOCK_STREAM, SMCProtoIPv4)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// construct socket address
-	sockaddr := &unix.SockaddrInet4{}
-	sockaddr.Port = port
-	ip := net.ParseIP(address).To4()
-	if ip == nil {
-		log.Fatal("Error parsing IP")
-	}
-	copy(sockaddr.Addr[:], ip[0:4])
-
-	// connect to server
-	err = unix.Connect(fd, sockaddr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Connected to server\n")
-
-	// create a connection from connected socket
-	file := os.NewFile(uintptr(fd), "")
-	conn, err := net.FileConn(file)
+	// connect via smc
+	conn, err := smcDial(address, port)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer conn.Close()
-	defer unix.Close(fd)
+	fmt.Printf("Connected to server\n")
 
 	// sent text, read reply an
 	text := "Hello, world\n"
