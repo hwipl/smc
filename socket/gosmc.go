@@ -4,11 +4,12 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"golang.org/x/sys/unix"
 	"io"
 	"log"
 	"net"
 	"os"
+
+	"golang.org/x/sys/unix"
 )
 
 // variable definitions
@@ -21,14 +22,14 @@ var (
 
 // SMC definitions
 const (
-	SMCPROTO_SMC  = 0
-	SMCPROTO_SMC6 = 1
+	SMCProtoIPv4 = 0
+	SMCProtoIPv6 = 1
 )
 
 // run as a server
-func run_server(address string, port int) {
+func runServer(address string, port int) {
 	// create socket
-	fd, err := unix.Socket(unix.AF_SMC, unix.SOCK_STREAM, SMCPROTO_SMC)
+	fd, err := unix.Socket(unix.AF_SMC, unix.SOCK_STREAM, SMCProtoIPv4)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -54,7 +55,6 @@ func run_server(address string, port int) {
 		log.Fatal(err)
 	}
 
-
 	// create a listener from listening socket
 	file := os.NewFile(uintptr(fd), "")
 	l, err := net.FileListener(file)
@@ -74,16 +74,21 @@ func run_server(address string, port int) {
 
 		// handle new connection: send data back to client
 		go func(c net.Conn) {
-			io.Copy(c, c)
+			fmt.Printf("New client connection\n")
+			written, err := io.Copy(c, c)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("Echoed %d bytes to client\n", written)
 			c.Close()
 		}(conn)
 	}
 }
 
 // run as a client
-func run_client(address string, port int) {
+func runClient(address string, port int) {
 	// create socket
-	fd, err := unix.Socket(unix.AF_SMC, unix.SOCK_STREAM, SMCPROTO_SMC)
+	fd, err := unix.Socket(unix.AF_SMC, unix.SOCK_STREAM, SMCProtoIPv4)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -102,6 +107,7 @@ func run_client(address string, port int) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Printf("Connected to server\n")
 
 	// create a connection from connected socket
 	file := os.NewFile(uintptr(fd), "")
@@ -113,9 +119,14 @@ func run_client(address string, port int) {
 	defer unix.Close(fd)
 
 	// sent text, read reply an
-	fmt.Fprintf(conn, "Hello, world\n")
+	text := "Hello, world\n"
+	fmt.Fprintf(conn, text)
+	fmt.Printf("Sent %d bytes to server: %s", len(text), text)
 	reply, err := bufio.NewReader(conn).ReadString('\n')
-	fmt.Printf("%s", reply)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Read %d bytes from server: %s", len(reply), reply)
 }
 
 func main() {
@@ -129,13 +140,13 @@ func main() {
 
 	// run server
 	if server {
-		run_server(address, port)
+		runServer(address, port)
 		return
 	}
 
 	// run client
 	if client {
-		run_client(address, port)
+		runClient(address, port)
 		return
 	}
 }
