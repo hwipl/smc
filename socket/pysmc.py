@@ -53,36 +53,78 @@ class SockaddrIn(ctypes.Structure):
         return f"{addr}:{port}"
 
 
-def bind(sock, address, port):
+class SockaddrIn6(ctypes.Structure):
+    """
+    Socket Address for IPv4 struct for ctypes
+    """
+    _fields_ = [("sin6_family", ctypes.c_ushort),
+                ("sin6_port", ctypes.c_uint16),
+                ("sin6_flowinfo", ctypes.c_uint32),
+                ("sin6_addr", ctypes.c_ubyte * 16),
+                ("sin6_scope_id", ctypes.c_uint32)]
+
+    def __init__(self, address=0, port=0):
+        super(SockaddrIn6, self).__init__()
+        self.sin6_family = ctypes.c_ushort(socket.AF_INET6)
+        self.sin6_port = ctypes.c_uint16(socket.htons(int(port)))
+        self.sin6_addr = (ctypes.c_ubyte * 16)(
+            *ipaddress.IPv6Address(address).packed)
+
+    def __len__(self):
+        return ctypes.sizeof(self)
+
+    def __repr__(self):
+        addr = ipaddress.IPv6Address(bytes(self.sin6_addr))
+        port = socket.ntohs(self.sin6_port)
+        return f"{addr}:{port}"
+
+
+def create_sockaddr(address, port):
+    """
+    create a sockaddr
+    """
+
+    try:
+        sockaddr = SockaddrIn(address, port)
+    except ipaddress.AddressValueError:
+        sockaddr = None
+
+    if not sockaddr:
+        try:
+            sockaddr = SockaddrIn6(address, port)
+        except ipaddress.AddressValueError:
+            sockaddr = None
+
+    return sockaddr
+
+
+def bind(sock, sockaddr):
     """
     bind() using libc with ctypes
     """
 
     # bind address and port
-    sockaddr = SockaddrIn(address, port)
     LIBC.bind(sock.fileno(), ctypes.byref(sockaddr), len(sockaddr))
 
 
-def accept(sock):
+def accept(sock, sockaddr):
     """
     accept() using libc with ctypes
     """
 
     # accept connection
-    sockaddr = SockaddrIn()
     sockaddr_len = ctypes.c_int(len(sockaddr))
     client_sock = LIBC.accept(sock.fileno(), ctypes.byref(sockaddr),
                               ctypes.byref(sockaddr_len))
     return socket.socket(fileno=client_sock), sockaddr
 
 
-def connect(sock, address, port):
+def connect(sock, sockaddr):
     """
     connect() using libc with ctypes
     """
 
     # connect to server
-    sockaddr = SockaddrIn(address, port)
     LIBC.connect(sock.fileno(), ctypes.byref(sockaddr), len(sockaddr))
 
 
@@ -98,14 +140,23 @@ def server(host, port):
     if not port:
         port = PORT
 
+    # create sockaddr from host and port
+    server_addr = create_sockaddr(host, port)
+
     # start server
     print("Starting SMC server")
-    with socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC) as sock:
+    if isinstance(server_addr, SockaddrIn6):
+        sock = socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC6)
+        client_addr = SockaddrIn6()
+    else:
+        sock = socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC)
+        client_addr = SockaddrIn()
+    with sock:
         # sock.bind() does not work with SMC, use libc version
-        bind(sock, host, port)
+        bind(sock, server_addr)
         sock.listen(1)
         # sock.accept() does not work with SMC, use libc version
-        conn, addr = accept(sock)
+        conn, addr = accept(sock, client_addr)
         with conn:
             print("Connected:", addr)
             while True:
@@ -127,11 +178,18 @@ def client(host, port):
     if not port:
         port = PORT
 
+    # create server sockaddr from host and port
+    server_addr = create_sockaddr(host, port)
+
     # start client
     print("Starting SMC client")
-    with socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC) as sock:
+    if isinstance(server_addr, SockaddrIn6):
+        sock = socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC6)
+    else:
+        sock = socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC)
+    with sock:
         # sock.connect() does not work with SMC, use libc version
-        connect(sock, host, port)
+        connect(sock, server_addr)
         sock.sendall(b"Hello, world")
         data = sock.recv(1024)
         print('Received:', repr(data))
