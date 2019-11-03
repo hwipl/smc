@@ -86,21 +86,6 @@ def connect(sock, address, port):
     LIBC.connect(sock.fileno(), ctypes.byref(sockaddr), len(sockaddr))
 
 
-def check():
-    """
-    Check if SMC sockets work
-    """
-
-    # try to create a SMC socket, read fileno, bind an address to it, and
-    # close it again
-    print("Checking SMC socket")
-    sock = socket.socket(AF_SMC, socket.SOCK_STREAM, SMCPROTO_SMC)
-    sock.fileno()
-    # sock.bind() does not work with SMC, use libc version
-    bind(sock, "0.0.0.0", PORT)
-    sock.close()
-
-
 def server(host, port):
     """
     Run SMC server,
@@ -159,8 +144,6 @@ def main():
 
     # parse command line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument("--check", action="store_true",
-                        help="check SMC socket")
     parser.add_argument("-s", "--server", action="store_true",
                         help="run server")
     parser.add_argument("-c", "--client", action="store_true",
@@ -170,10 +153,6 @@ def main():
     args = parser.parse_args()
 
     # run other commands based on command line arguments
-    if args.check:
-        check()
-        return
-
     if args.client:
         client(args.address, args.port)
         return
