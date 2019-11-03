@@ -18,44 +18,86 @@
 
 #define PORT 50000
 
+int create_sockaddr4(char *address, int port, struct sockaddr_in *sockaddr) {
+	// set ipv4 defaults
+	sockaddr->sin_family = AF_INET;
+	sockaddr->sin_addr.s_addr = INADDR_ANY;
+	sockaddr->sin_port = htons(PORT);
+
+	/* parse given port if specified */
+	if (port > 0) {
+		sockaddr->sin_port = htons(port);
+	}
+
+	// parse given address if specified
+	if (address && inet_pton(AF_INET, address, &sockaddr->sin_addr) != 1) {
+		return -1;
+	}
+	return 0;
+}
+
+int create_sockaddr6(char *address, int port, struct sockaddr_in6 *sockaddr) {
+	// set ipv6 defaults
+	sockaddr->sin6_family = AF_INET6;
+	sockaddr->sin6_addr = in6addr_any;
+	sockaddr->sin6_port = htons(PORT);
+
+	/* parse given port if specified */
+	if (port > 0) {
+		sockaddr->sin6_port = htons(port);
+	}
+
+	// parse given address if specified
+	if (address &&
+	    inet_pton(AF_INET6, address, &sockaddr->sin6_addr) != 1) {
+		return -1;
+	}
+	return 0;
+}
+
 /* run server */
 int run_server(char *address, int port) {
-	struct sockaddr_in server_addr;
-	struct sockaddr_in client_addr;
+	struct sockaddr_in6 server_addr6;
+	struct sockaddr_in6 client_addr6;
+	struct sockaddr_in server_addr4;
+	struct sockaddr_in client_addr4;
 	int server_sock, client_sock;
 	int client_addrlen;
 	char buffer[1024];
 	int send_count;
 	int recv_count;
+	int ipv4 = 1;
+	int rc;
 
-	/* create socket */
-	server_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC);
-	if (server_sock == -1) {
-		printf("Error creating socket\n");
-		return -1;
-	}
-
-	/* configure server address struct */
-	server_addr.sin_family = AF_INET;
-
-	/* listening address */
-	server_addr.sin_addr.s_addr = INADDR_ANY;
-	if (address) {
-		if (inet_pton(AF_INET, address, &server_addr.sin_addr) != 1) {
+	/* create socket address from address and port */
+	if (create_sockaddr4(address, port, &server_addr4)) {
+		ipv4 = 0;
+		if (create_sockaddr6(address, port, &server_addr6)) {
 			printf("Error parsing server address\n");
 			return -1;
 		}
 	}
 
-	/* listening port */
-	server_addr.sin_port = htons(PORT);
-	if (port > 0) {
-		server_addr.sin_port = htons(port);
+	/* create socket */
+	if (ipv4) {
+		server_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC);
+	} else {
+		server_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC6);
+	}
+	if (server_sock == -1) {
+		printf("Error creating socket\n");
+		return -1;
 	}
 
 	/* bind listening address and port */
-	if (bind(server_sock, (struct sockaddr *) &server_addr,
-		 sizeof(server_addr))) {
+	if (ipv4) {
+		rc = bind(server_sock, (struct sockaddr *) &server_addr4,
+			  sizeof(server_addr4));
+	} else {
+		rc = bind(server_sock, (struct sockaddr *) &server_addr6,
+			  sizeof(server_addr6));
+	}
+	if (rc) {
 		printf("Error binding socket\n");
 		return -1;
 	}
@@ -67,9 +109,17 @@ int run_server(char *address, int port) {
 	}
 
 	/* accept new connection */
-	client_addrlen = sizeof(client_addr);
-	client_sock = accept(server_sock, (struct sockaddr *) &client_addr,
-			     &client_addrlen);
+	if (ipv4) {
+		client_addrlen = sizeof(client_addr4);
+		client_sock = accept(server_sock,
+				     (struct sockaddr *) &client_addr4,
+				     &client_addrlen);
+	} else {
+		client_addrlen = sizeof(client_addr6);
+		client_sock = accept(server_sock,
+				     (struct sockaddr *) &client_addr6,
+				     &client_addrlen);
+	}
 	if (client_sock == -1) {
 		printf("Error accepting connection\n");
 		return -1;
@@ -111,37 +161,43 @@ int run_server(char *address, int port) {
 
 /* run client */
 int run_client(char *address, int port) {
-	struct sockaddr_in server_addr;
+	struct sockaddr_in6 server_addr6;
+	struct sockaddr_in server_addr4;
 	const char *hello = "Hello, world";
 	char buffer[1024];
 	int client_sock;
 	int count;
+	int ipv4;
+	int rc;
 
+	/* create socket address from address and port */
+	if (create_sockaddr4(address, port, &server_addr4)) {
+		ipv4 = 0;
+		if (create_sockaddr6(address, port, &server_addr6)) {
+			printf("Error parsing server address\n");
+			return -1;
+		}
+	}
 	/* create socket */
-	client_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC);
+	if (ipv4) {
+		client_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC);
+	} else {
+		client_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC6);
+	}
 	if (client_sock == -1) {
 		printf("Error creating socket\n");
 		return -1;
 	}
 
-	/* configure server address struct */
-	server_addr.sin_family = AF_INET;
-
-	/* connecting address */
-	if (inet_pton(AF_INET, address, &server_addr.sin_addr) != 1) {
-		printf("Error parsing server address\n");
-		return -1;
-	}
-
-	/* connecting port */
-	server_addr.sin_port = htons(PORT);
-	if (port > 0) {
-		server_addr.sin_port = htons(port);
-	}
-
 	/* connect to server */
-	if (connect(client_sock, (struct sockaddr *) &server_addr,
-		    sizeof(server_addr))) {
+	if (ipv4) {
+		rc = connect(client_sock, (struct sockaddr *) &server_addr4,
+			     sizeof(server_addr4));
+	} else {
+		rc = connect(client_sock, (struct sockaddr *) &server_addr6,
+			     sizeof(server_addr6));
+	}
+	if (rc) {
 		printf("Error connecting to server\n");
 		return -1;
 	}
