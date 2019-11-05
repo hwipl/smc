@@ -1,0 +1,69 @@
+<svg>
+<!-- use foreignobject to include xhtml -->
+<foreignobject>
+<body xmlns="http://www.w3.org/1999/xhtml">
+
+<!-- CSS styles -->
+<style>
+    .highlight {
+        color: black;
+        background-color: yellow;
+    }
+</style>
+
+<!-- content -->
+<pre>::1:33186 -> ::1:50000: Proposal: <span class="1">Eyecatcher: SMC-R</span>, <span class="2">Type: 1 (Proposal)</span>,
+<span class="3">Length: 69</span>, <span class="4">Version: 1</span>, <span class="5">Flag: 0</span>, <span class="6">Path: SMC-R</span>, <span class="7">Peer ID: 14660@98:03:9b:ab:cd:ef</span>,
+<span class="8">SMC-R GID: fe80::9a03:9bff:feab:cdef</span>, <span class="9">RoCE MAC: 98:03:9b:ab:cd:ef</span>,
+<span class="10">IP Area Offset: 0</span>, <span class="11">SMC-D GID: 0</span>, <span class="12">IPv4 Prefix: 0.0.0.0/0</span>, <span class="13">IPv6 Prefix Count: 1</span>,
+<span class="14">IPv6 Prefix: ::1/128</span>, <span class="1">Trailer: SMC-R</span>
+00000000  <span class="1">e2 d4 c3 d9</span> <span class="2">01</span> <span class="3">00 45</span> <span class="4">1</span><span class="5"><span class="6">0</span></span>  <span class="7">39 44 98 03 9b ab cd ef</span>  |<span class="1">....</span><span class="2">.</span><span class="3">.E</span><span class="4"><span class="5"><span class="6">.</span></span></span><span class="7">9D......</span>|
+00000010  <span class="8">fe 80 00 00 00 00 00 00  9a 03 9b ff fe ab cd ef</span>  |<span class="8">................</span>|
+00000020  <span class="9">98 03 9b ab cd ef</span> <span class="10">00 00</span>  <span class="12">00 00 00 00 00</span> 00 00 <span class="13">01</span>  |<span class="9">......</span><span class="10">..</span><span class="12">....</span>..<span class="13">..</span>|
+00000030  <span class="14">00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 01</span>  |<span class="14">................</span>|
+00000040  <span class="14">80</span> <span class="1">e2 d4 c3 d9</span>                                    |<span class="14">.</span><span class="1">....</span>|</pre>
+
+<!-- script for highlighting -->
+<script type="text/javascript">
+<![CDATA[
+// set mouse over for a class
+function mouseOverByClass(className, highlightClassName) {
+    var elements = document.getElementsByClassName(className);
+    function mouseOverEvent() {
+        for(var i = 0; i < elements.length; i++) {
+            elements[i].classList.add(highlightClassName);
+        }
+    };
+    function mouseOutEvent() {
+        for(var i = 0; i < elements.length; i++) {
+            elements[i].classList.remove(highlightClassName);
+        }
+    };
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].onmouseover = mouseOverEvent;
+        elements[i].onmouseout = mouseOutEvent;
+    }
+}
+
+// setup highlights for classes
+mouseOverByClass("1", "highlight")
+mouseOverByClass("2", "highlight")
+mouseOverByClass("3", "highlight")
+mouseOverByClass("4", "highlight")
+mouseOverByClass("5", "highlight")
+mouseOverByClass("6", "highlight")
+mouseOverByClass("7", "highlight")
+mouseOverByClass("8", "highlight")
+mouseOverByClass("9", "highlight")
+mouseOverByClass("10", "highlight")
+mouseOverByClass("11", "highlight")
+mouseOverByClass("12", "highlight")
+mouseOverByClass("13", "highlight")
+mouseOverByClass("14", "highlight")
+]]>
+</script>
+
+</body>
+</foreignobject>
+<!-- end of xhtml content -->
+</svg>
