@@ -1,0 +1,59 @@
+<svg>
+<!-- use foreignobject to include xhtml -->
+<foreignobject>
+<body xmlns="http://www.w3.org/1999/xhtml">
+
+<!-- CSS styles -->
+<style>
+    .highlight {
+        color: black;
+        background-color: yellow;
+    }
+</style>
+
+<!-- content -->
+<pre>::1:60670 -> ::1:50000: Decline: <span class="1">Eyecatcher: SMC-R</span>, <span class="2">Type: 4 (Decline)</span>,
+<span class="3">Length: 28</span>, <span class="4">Version: 1</span>, <span class="5">Out of Sync: 0</span>, <span class="6">Path: SMC-R</span>,
+<span class="7">Peer ID: 9509@25:25:25:25:25:00</span>, <span class="8">Peer Diagnosis: no SMC device found (R or D)</span>,
+<span class="1">Trailer: SMC-R</span>
+00000000  <span class="1">e2 d4 c3 d9</span> <span class="2">04</span> <span class="3">00 1c</span> <span class="4">1</span><span class="5"><span class="6">0</span></span>  <span class="7">25 25 25 25 25 25 25 00</span>  |<span class="1">....</span><span class="2">.</span><span class="3">..</span><span class="4"><span class="5"><span class="6">.</span></span></span><span class="7">%%%%%%%.</span>|
+00000010  <span class="8">03 03 00 00 00 00 00 00</span>  <span class="1">e2 d4 c3 d9</span>              |<span class="8">........</span><span class="1">....</span>|</pre>
+
+<!-- script for highlighting -->
+<script type="text/javascript">
+<![CDATA[
+// set mouse over for a class
+function mouseOverByClass(className, highlightClassName) {
+    var elements = document.getElementsByClassName(className);
+    function mouseOverEvent() {
+        for(var i = 0; i < elements.length; i++) {
+            elements[i].classList.add(highlightClassName);
+        }
+    };
+    function mouseOutEvent() {
+        for(var i = 0; i < elements.length; i++) {
+            elements[i].classList.remove(highlightClassName);
+        }
+    };
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].onmouseover = mouseOverEvent;
+        elements[i].onmouseout = mouseOutEvent;
+    }
+}
+
+// setup highlights for classes
+mouseOverByClass("1", "highlight")
+mouseOverByClass("2", "highlight")
+mouseOverByClass("3", "highlight")
+mouseOverByClass("4", "highlight")
+mouseOverByClass("5", "highlight")
+mouseOverByClass("6", "highlight")
+mouseOverByClass("7", "highlight")
+mouseOverByClass("8", "highlight")
+]]>
+</script>
+
+</body>
+</foreignobject>
+<!-- end of xhtml content -->
+</svg>
