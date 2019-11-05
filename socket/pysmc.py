@@ -55,7 +55,7 @@ class SockaddrIn(ctypes.Structure):
 
 class SockaddrIn6(ctypes.Structure):
     """
-    Socket Address for IPv4 struct for ctypes
+    Socket Address for IPv6 struct for ctypes
     """
     _fields_ = [("sin6_family", ctypes.c_ushort),
                 ("sin6_port", ctypes.c_uint16),
