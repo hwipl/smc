@@ -102,22 +102,26 @@ Low level SMC versions of `Listen()` and `Dial()`:
 func smcListen(address string, port int) (net.Listener, error) {
         var l net.Listener
         var err error
+        var fd int
+
+        // construct socket address from address and port
+        typ, sockaddr := createSockaddr(address, port)
+        if typ == "err" {
+                return l, fmt.Errorf("Error parsing IP")
+        }
 
         // create socket
-        fd, err := unix.Socket(unix.AF_SMC, unix.SOCK_STREAM, SMCProtoIPv4)
+        if typ == "ipv4" {
+                fd, err = unix.Socket(unix.AF_SMC, unix.SOCK_STREAM,
+                        SMCProtoIPv4)
+        } else {
+                fd, err = unix.Socket(unix.AF_SMC, unix.SOCK_STREAM,
+                        SMCProtoIPv6)
+        }
         if err != nil {
                 return l, err
         }
         defer unix.Close(fd)
-
-        // construct socket address
-        sockaddr := &unix.SockaddrInet4{}
-        sockaddr.Port = port
-        ip := net.ParseIP(address).To4()
-        if ip == nil {
-                return l, fmt.Errorf("Error parsing IP")
-        }
-        copy(sockaddr.Addr[:], ip[0:4])
 
         // bind socket address
         err = unix.Bind(fd, sockaddr)
@@ -141,22 +145,27 @@ func smcListen(address string, port int) (net.Listener, error) {
 func smcDial(address string, port int) (net.Conn, error) {
         var conn net.Conn
         var err error
+        var fd int
+
+        // construct socket address from address and port
+        typ, sockaddr := createSockaddr(address, port)
+        if typ == "err" {
+                return conn, fmt.Errorf("Error parsing IP")
+        }
 
         // create socket
-        fd, err := unix.Socket(unix.AF_SMC, unix.SOCK_STREAM, SMCProtoIPv4)
+        if typ == "ipv4" {
+                fd, err = unix.Socket(unix.AF_SMC, unix.SOCK_STREAM,
+                        SMCProtoIPv4)
+        } else {
+                fd, err = unix.Socket(unix.AF_SMC, unix.SOCK_STREAM,
+                        SMCProtoIPv6)
+        }
+
         if err != nil {
                 return conn, err
         }
         defer unix.Close(fd)
-
-        // construct socket address
-        sockaddr := &unix.SockaddrInet4{}
-        sockaddr.Port = port
-        ip := net.ParseIP(address).To4()
-        if ip == nil {
-                return conn, fmt.Errorf("Error parsing IP")
-        }
-        copy(sockaddr.Addr[:], ip[0:4])
 
         // connect to server
         err = unix.Connect(fd, sockaddr)
