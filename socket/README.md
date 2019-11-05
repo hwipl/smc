@@ -13,23 +13,121 @@ SMC protocol definitions:
 #define SMCPROTO_SMC6 1
 ```
 
+SMC socket address (AF\_INET and AF\_INET6) creation code:
+
+```c
+/* create an ipv4 socket address with address and port */
+int create_sockaddr4(char *address, int port, struct sockaddr_in *sockaddr) {
+        /* set ipv4 defaults */
+        sockaddr->sin_family = AF_INET;
+        sockaddr->sin_addr.s_addr = INADDR_ANY;
+        sockaddr->sin_port = htons(PORT);
+
+        /* parse given port if specified */
+        if (port > 0) {
+                sockaddr->sin_port = htons(port);
+        }
+
+        /* parse given address if specified */
+        if (address && inet_pton(AF_INET, address, &sockaddr->sin_addr) != 1) {
+                return -1;
+        }
+        return sizeof(struct sockaddr_in);
+}
+
+/* create an ipv6 socket address with address and port */
+int create_sockaddr6(char *address, int port, struct sockaddr_in6 *sockaddr) {
+        /* set ipv6 defaults */
+        sockaddr->sin6_family = AF_INET6;
+        sockaddr->sin6_addr = in6addr_any;
+        sockaddr->sin6_port = htons(PORT);
+
+        /* parse given port if specified */
+        if (port > 0) {
+                sockaddr->sin6_port = htons(port);
+        }
+
+        /* parse given address if specified */
+        if (address &&
+            inet_pton(AF_INET6, address, &sockaddr->sin6_addr) != 1) {
+                return -1;
+        }
+        return sizeof(struct sockaddr_in6);
+}
+
+/* create an ipv4 or ipv6 sock address with address and port */
+int create_sockaddr(char *address, int port, struct sockaddr_in6 *sockaddr) {
+        int sockaddr_len;
+
+        /* check if it's an ipv4 address */
+        sockaddr_len = create_sockaddr4(address, port,
+                                        (struct sockaddr_in *) sockaddr);
+        if (sockaddr_len > 0) {
+                return sockaddr_len;
+        }
+
+        /* check if it's an ipv6 address */
+        sockaddr_len = create_sockaddr6(address, port, sockaddr);
+        if (sockaddr_len > 0) {
+                return sockaddr_len;
+        }
+
+        /* parsing error */
+        return -1;
+}
+```
+
 SMC specific server socket code:
 
 ```c
-struct sockaddr_in server_addr;
+struct sockaddr_in6 server_addr;
+struct sockaddr_in6 client_addr;
 int server_sock, client_sock;
+int server_addr_len;
+int client_addr_len;
 
-server_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC);
+/* create socket address from address and port */
+server_addr_len = create_sockaddr(address, port, &server_addr);
+if (server_addr_len < 0) {
+        printf("Error parsing server address\n");
+        return -1;
+}
 
-server_addr.sin_family = AF_INET;
-server_addr.sin_addr.s_addr = INADDR_ANY;
-server_addr.sin_port = htons(PORT);
+/* create socket */
+if (server_addr.sin6_family == AF_INET6) {
+        server_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC6);
+} else {
+        server_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC);
+}
+if (server_sock == -1) {
+        printf("Error creating socket\n");
+        return -1;
+}
 
-bind(server_sock, (struct sockaddr *) &server_addr, sizeof(server_addr));
-listen(server_sock, 1);
-client_sock = accept(server_sock, NULL, NULL);
+/* bind listening address and port */
+if (bind(server_sock, (struct sockaddr *) &server_addr,
+         server_addr_len)) {
+        printf("Error binding socket\n");
+        return -1;
+}
 
-/* read from socket, write to socket */
+/* wait for a new connection */
+if (listen(server_sock, 1)) {
+        printf("Error listening on socket\n");
+        return -1;
+}
+
+/* accept new connection */
+client_addr_len = server_addr_len;
+client_sock = accept(server_sock, (struct sockaddr *) &client_addr,
+                     &client_addr_len);
+if (client_sock == -1) {
+        printf("Error accepting connection\n");
+        return -1;
+}
+printf("New client connection\n");
+
+/* read from client socket, write to client socket */
 
 close(client_sock);
 close(server_sock);
@@ -38,16 +136,35 @@ close(server_sock);
 SMC specific client socket code:
 
 ```c
-struct sockaddr_in server_addr;
+struct sockaddr_in6 server_addr;
+int server_addr_len;
 int client_sock;
 
-client_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC);
+/* create socket address from address and port */
+server_addr_len = create_sockaddr(address, port, &server_addr);
+if (server_addr_len < 0) {
+        printf("Error parsing server address\n");
+        return -1;
+}
 
-server_addr.sin_family = AF_INET;
-inet_pton(AF_INET, address, &server_addr.sin_addr);
-server_addr.sin_port = htons(PORT);
+/* create socket */
+if (server_addr.sin6_family == AF_INET6) {
+        client_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC6);
+} else {
+        client_sock = socket(AF_SMC, SOCK_STREAM, SMCPROTO_SMC);
+}
+if (client_sock == -1) {
+        printf("Error creating socket\n");
+        return -1;
+}
 
-connect(client_sock, (struct sockaddr *) &server_addr, sizeof(server_addr));
+/* connect to server */
+if (connect(client_sock, (struct sockaddr *) &server_addr,
+            server_addr_len)) {
+        printf("Error connecting to server\n");
+        return -1;
+}
+printf("Connected to server\n");
 
 /* write to socket, read from socket  */
 
