@@ -13,7 +13,7 @@ compiled with SMC support with:
 $ zgrep "CONFIG_SMC" /proc/config.gz
 ```
 
-or you can use the `smc.sh` script in this folder with:
+or you can use the [smc.sh](smc.sh) script in this folder with:
 
 ```console
 $ ./smc.sh check
@@ -31,3 +31,11 @@ or with the `smc.sh` script:
 ```console
 # ./smc.sh load
 ```
+
+## SMC Socket Programming
+
+See the folder [socket](socket/) for information on SMC socket programming.
+
+## CLC Handshake
+
+See the folder [handshake](handshake/) for information on SMC's CLC handshake.
