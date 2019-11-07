@@ -5,31 +5,101 @@
 ### Proposal
 
 SMC-R IPv4 example:
-![Loopback CLC Proposal SMC-R IPv4](lo-proposal-smcr-ipv4.svg)
+
+```
+127.0.0.1:60294 -> 127.0.0.1:50000: Proposal: Eyecatcher: SMC-R,
+Type: 1 (Proposal), Length: 52, Version: 1, Flag: 0, Path: SMC-R,
+Peer ID: 45472@98:03:9b:ab:cd:ef, SMC-R GID: fe80::9a03:9bff:feab:cdef,
+RoCE MAC: 98:03:9b:ab:cd:ef, IP Area Offset: 0, SMC-D GID: 0,
+IPv4 Prefix: 127.0.0.0/8, IPv6 Prefix Count: 0, Trailer: SMC-R
+00000000  e2 d4 c3 d9 01 00 34 10  b1 a0 98 03 9b ab cd ef  |......4.........|
+00000010  fe 80 00 00 00 00 00 00  9a 03 9b ff fe ab cd ef  |................|
+00000020  98 03 9b ab cd ef 00 00  7f 00 00 00 08 00 00 00  |................|
+00000030  e2 d4 c3 d9                                       |....|
+```
 
 SMC-R IPv6 example:
-![Loopback CLC Proposal SMC-R IPv6](lo-proposal-smcr-ipv6.svg)
+
+```
+::1:33186 -> ::1:50000: Proposal: Eyecatcher: SMC-R, Type: 1 (Proposal),
+Length: 69, Version: 1, Flag: 0, Path: SMC-R, Peer ID: 14660@98:03:9b:ab:cd:ef,
+SMC-R GID: fe80::9a03:9bff:feab:cdef, RoCE MAC: 98:03:9b:ab:cd:ef,
+IP Area Offset: 0, SMC-D GID: 0, IPv4 Prefix: 0.0.0.0/0, IPv6 Prefix Count: 1,
+IPv6 Prefix: ::1/128, Trailer: SMC-R
+00000000  e2 d4 c3 d9 01 00 45 10  39 44 98 03 9b ab cd ef  |......E.9D......|
+00000010  fe 80 00 00 00 00 00 00  9a 03 9b ff fe ab cd ef  |................|
+00000020  98 03 9b ab cd ef 00 00  00 00 00 00 00 00 00 01  |................|
+00000030  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 01  |................|
+00000040  80 e2 d4 c3 d9                                    |.....|
+```
 
 ### Accept
 
+SMC-R IPv4 example:
+
+```
+127.0.0.1:50000 -> 127.0.0.1:60294: Accept: Eyecatcher: SMC-R,
+Type: 2 (Accept), Length: 68, Version: 1, First Contact: 1, Path: SMC-R,
+Peer ID: 45472@98:03:9b:ab:cd:ef, SMC-R GID: fe80::9a03:9bff:feab:cdef,
+RoCE MAC: 98:03:9b:ab:cd:ef, QP Number: 228, RMB RKey: 5501, RMBE Index: 1,
+RMBE Alert Token: 5, RMBE Size: 2 (65536), QP MTU: 3 (1024),
+RMB Virtual Address: 0xf0a60000, Packet Sequence Number: 7534078,
+Trailer: SMC-R
+00000000  e2 d4 c3 d9 02 00 44 18  b1 a0 98 03 9b ab cd ef  |......D.........|
+00000010  fe 80 00 00 00 00 00 00  9a 03 9b ff fe ab cd ef  |................|
+00000020  98 03 9b ab cd ef 00 00  e4 00 00 15 7d 01 00 00  |............}...|
+00000030  00 05 23 00 00 00 00 00  f0 a6 00 00 00 72 f5 fe  |..#..........r..|
+00000040  e2 d4 c3 d9                                       |....|
+```
+
 ### Confirm
 
-### Deny
+SMC-R IPv4 example:
 
-### List of Example Dumps
+```
+127.0.0.1:60294 -> 127.0.0.1:50000: Confirm: Eyecatcher: SMC-R,
+Type: 3 (Confirm), Length: 68, Version: 1, Flag: 0, Path: SMC-R,
+Peer ID: 45472@98:03:9b:ab:cd:ef, SMC-R GID: fe80::9a03:9bff:feab:cdef,
+RoCE MAC: 98:03:9b:ab:cd:ef, QP Number: 229, RMB RKey: 6271, RMBE Index: 1,
+RMBE Alert Token: 6, RMBE Size: 2 (65536), QP MTU: 3 (1024),
+RMB Virtual Address: 0xf0a40000, Packet Sequence Number: 887204,
+Trailer: SMC-R
+00000000  e2 d4 c3 d9 03 00 44 10  b1 a0 98 03 9b ab cd ef  |......D.........|
+00000010  fe 80 00 00 00 00 00 00  9a 03 9b ff fe ab cd ef  |................|
+00000020  98 03 9b ab cd ef 00 00  e5 00 00 18 7f 01 00 00  |................|
+00000030  00 06 23 00 00 00 00 00  f0 a4 00 00 00 0d 89 a4  |..#.............|
+00000040  e2 d4 c3 d9                                       |....|
+```
 
-Note: the dump files listed below cannot be displayed on GitHub.
+### Decline
 
-Hex dumps with highlighting of SMC-R CLC handshake messages over IPv4 on the
-loopback device:
-* CLC Proposal: lo-proposal-smcr-ipv4 (.html, .svg)
-* CLC Accept: lo-accept-smcr-ipv4 (.html, .svg)
-* CLC Confirm: lo-confirm-smcr-ipv4 (.html, .svg)
-* CLC Decline: lo-decline-smcr-ipv4 (.html, .svg)
+SMC-R IPv4 example:
 
-Hex dumps with highlighting of SMC-R CLC handshake messages over IPv6 on the
-loopback device:
-* CLC Proposal: lo-proposal-smcr-ipv6 (.html, .svg)
-* CLC Accept: lo-accept-smcr-ipv6 (.html, .svg)
-* CLC Confirm: lo-confirm-smcr-ipv6 (.html, .svg)
-* CLC Decline: lo-decline-smcr-ipv6 (.html, .svg)
+```
+127.0.0.1:36140 -> 127.0.0.1:50000: Decline: Eyecatcher: SMC-R,
+Type: 4 (Decline), Length: 28, Version: 1, Out of Sync: 0, Path: SMC-R,
+Peer ID: 9509@25:25:25:25:25:00, Peer Diagnosis: no SMC device found (R or D),
+Trailer: SMC-R
+00000000  e2 d4 c3 d9 04 00 1c 10  25 25 25 25 25 25 25 00  |........%%%%%%%.|
+00000010  03 03 00 00 00 00 00 00  e2 d4 c3 d9              |............|
+```
+
+### Example Packet Dumps with Highlighting
+
+This folder contains example packet dumps of CLC handshake messages with
+highlighting of the fields and bytes in the messages. The highlighting is
+realized as a mouseover effect.
+
+Note: Open the dumps in a web browser to see the highlighting mouseover effect.
+
+SMC-R CLC handshake messages over IPv4 on the loopback device:
+* CLC Proposal: [lo-proposal-smcr-ipv4.html](lo-proposal-smcr-ipv4.html)
+* CLC Accept: [lo-accept-smcr-ipv4.html](lo-accept-smcr-ipv4.html)
+* CLC Confirm: [lo-confirm-smcr-ipv4.html](lo-confirm-smcr-ipv4.html)
+* CLC Decline: [lo-decline-smcr-ipv4.html](lo-decline-smcr-ipv4.html)
+
+SMC-R CLC handshake messages over IPv6 on the loopback device:
+* CLC Proposal: [lo-proposal-smcr-ipv6.html](lo-proposal-smcr-ipv6.html)
+* CLC Accept: [lo-accept-smcr-ipv6.html](lo-accept-smcr-ipv6.html)
+* CLC Confirm: [lo-confirm-smcr-ipv6.html](lo-confirm-smcr-ipv6.html)
+* CLC Decline: [lo-decline-smcr-ipv6.html](lo-decline-smcr-ipv6.html)
