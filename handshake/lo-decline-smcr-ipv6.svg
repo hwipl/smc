@@ -1,23 +1,27 @@
-<svg>
-<!-- use foreignobject to include xhtml -->
-<foreignobject>
-<body xmlns="http://www.w3.org/1999/xhtml">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+<title>CLC Decline SMC-R IPv6 Loopback</title>
+<desc>CLC Decline Message for SMC-R over IPv6 on the loopback device.</desc>
 
 <!-- CSS styles -->
 <style>
+    text {
+        white-space: pre-wrap;
+        font-family: monospace;
+    }
     .highlight {
-        color: black;
-        background-color: yellow;
+        fill: orange;
+        font-weight: bold;
     }
 </style>
 
 <!-- content -->
-<pre>::1:60670 -> ::1:50000: Decline: <span class="1">Eyecatcher: SMC-R</span>, <span class="2">Type: 4 (Decline)</span>,
-<span class="3">Length: 28</span>, <span class="4">Version: 1</span>, <span class="5">Out of Sync: 0</span>, <span class="6">Path: SMC-R</span>,
-<span class="7">Peer ID: 9509@25:25:25:25:25:00</span>, <span class="8">Peer Diagnosis: no SMC device found (R or D)</span>,
-<span class="1">Trailer: SMC-R</span>
-00000000  <span class="1">e2 d4 c3 d9</span> <span class="2">04</span> <span class="3">00 1c</span> <span class="4">1</span><span class="5"><span class="6">0</span></span>  <span class="7">25 25 25 25 25 25 25 00</span>  |<span class="1">....</span><span class="2">.</span><span class="3">..</span><span class="4"><span class="5"><span class="6">.</span></span></span><span class="7">%%%%%%%.</span>|
-00000010  <span class="8">03 03 00 00 00 00 00 00</span>  <span class="1">e2 d4 c3 d9</span>              |<span class="8">........</span><span class="1">....</span>|</pre>
+<text x="10" y="20">::1:60670 -> ::1:50000: Decline: <tspan class="1">Eyecatcher: SMC-R</tspan>, <tspan class="2">Type: 4 (Decline)</tspan>,
+<tspan class="3">Length: 28</tspan>, <tspan class="4">Version: 1</tspan>, <tspan class="5">Out of Sync: 0</tspan>, <tspan class="6">Path: SMC-R</tspan>,
+<tspan class="7">Peer ID: 9509@25:25:25:25:25:00</tspan>, <tspan class="8">Peer Diagnosis: no SMC device found (R or D)</tspan>,
+<tspan class="1">Trailer: SMC-R</tspan>
+00000000  <tspan class="1">e2 d4 c3 d9</tspan> <tspan class="2">04</tspan> <tspan class="3">00 1c</tspan> <tspan class="4">1</tspan><tspan class="5"><tspan class="6">0</tspan></tspan>  <tspan class="7">25 25 25 25 25 25 25 00</tspan>  |<tspan class="1">....</tspan><tspan class="2">.</tspan><tspan class="3">..</tspan><tspan class="4"><tspan class="5"><tspan class="6">.</tspan></tspan></tspan><tspan class="7">%%%%%%%.</tspan>|
+00000010  <tspan class="8">03 03 00 00 00 00 00 00</tspan>  <tspan class="1">e2 d4 c3 d9</tspan>              |<tspan class="8">........</tspan><tspan class="1">....</tspan>|</text>
 
 <!-- script for highlighting -->
 <script type="text/javascript">
@@ -53,7 +57,4 @@ mouseOverByClass("8", "highlight")
 ]]>
 </script>
 
-</body>
-</foreignobject>
-<!-- end of xhtml content -->
 </svg>
