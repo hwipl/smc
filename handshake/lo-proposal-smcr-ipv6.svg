@@ -1,27 +1,31 @@
-<svg>
-<!-- use foreignobject to include xhtml -->
-<foreignobject>
-<body xmlns="http://www.w3.org/1999/xhtml">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+<title>CLC Proposal SMC-R IPv6 Loopback</title>
+<desc>CLC Proposal Message for SMC-R over IPv6 on the loopback device.</desc>
 
 <!-- CSS styles -->
 <style>
+     text {
+        white-space: pre-wrap;
+        font-family: monospace;
+    }
     .highlight {
-        color: black;
-        background-color: yellow;
+        fill: orange;
+        font-weight: bold;
     }
 </style>
 
 <!-- content -->
-<pre>::1:33186 -> ::1:50000: Proposal: <span class="1">Eyecatcher: SMC-R</span>, <span class="2">Type: 1 (Proposal)</span>,
-<span class="3">Length: 69</span>, <span class="4">Version: 1</span>, <span class="5">Flag: 0</span>, <span class="6">Path: SMC-R</span>, <span class="7">Peer ID: 14660@98:03:9b:ab:cd:ef</span>,
-<span class="8">SMC-R GID: fe80::9a03:9bff:feab:cdef</span>, <span class="9">RoCE MAC: 98:03:9b:ab:cd:ef</span>,
-<span class="10">IP Area Offset: 0</span>, <span class="11">SMC-D GID: 0</span>, <span class="12">IPv4 Prefix: 0.0.0.0/0</span>, <span class="13">IPv6 Prefix Count: 1</span>,
-<span class="14">IPv6 Prefix: ::1/128</span>, <span class="1">Trailer: SMC-R</span>
-00000000  <span class="1">e2 d4 c3 d9</span> <span class="2">01</span> <span class="3">00 45</span> <span class="4">1</span><span class="5"><span class="6">0</span></span>  <span class="7">39 44 98 03 9b ab cd ef</span>  |<span class="1">....</span><span class="2">.</span><span class="3">.E</span><span class="4"><span class="5"><span class="6">.</span></span></span><span class="7">9D......</span>|
-00000010  <span class="8">fe 80 00 00 00 00 00 00  9a 03 9b ff fe ab cd ef</span>  |<span class="8">................</span>|
-00000020  <span class="9">98 03 9b ab cd ef</span> <span class="10">00 00</span>  <span class="12">00 00 00 00 00</span> 00 00 <span class="13">01</span>  |<span class="9">......</span><span class="10">..</span><span class="12">....</span>..<span class="13">..</span>|
-00000030  <span class="14">00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 01</span>  |<span class="14">................</span>|
-00000040  <span class="14">80</span> <span class="1">e2 d4 c3 d9</span>                                    |<span class="14">.</span><span class="1">....</span>|</pre>
+<text x="10" y="20">::1:33186 -> ::1:50000: Proposal: <tspan class="1">Eyecatcher: SMC-R</tspan>, <tspan class="2">Type: 1 (Proposal)</tspan>,
+<tspan class="3">Length: 69</tspan>, <tspan class="4">Version: 1</tspan>, <tspan class="5">Flag: 0</tspan>, <tspan class="6">Path: SMC-R</tspan>, <tspan class="7">Peer ID: 14660@98:03:9b:ab:cd:ef</tspan>,
+<tspan class="8">SMC-R GID: fe80::9a03:9bff:feab:cdef</tspan>, <tspan class="9">RoCE MAC: 98:03:9b:ab:cd:ef</tspan>,
+<tspan class="10">IP Area Offset: 0</tspan>, <tspan class="11">SMC-D GID: 0</tspan>, <tspan class="12">IPv4 Prefix: 0.0.0.0/0</tspan>, <tspan class="13">IPv6 Prefix Count: 1</tspan>,
+<tspan class="14">IPv6 Prefix: ::1/128</tspan>, <tspan class="1">Trailer: SMC-R</tspan>
+00000000  <tspan class="1">e2 d4 c3 d9</tspan> <tspan class="2">01</tspan> <tspan class="3">00 45</tspan> <tspan class="4">1</tspan><tspan class="5"><tspan class="6">0</tspan></tspan>  <tspan class="7">39 44 98 03 9b ab cd ef</tspan>  |<tspan class="1">....</tspan><tspan class="2">.</tspan><tspan class="3">.E</tspan><tspan class="4"><tspan class="5"><tspan class="6">.</tspan></tspan></tspan><tspan class="7">9D......</tspan>|
+00000010  <tspan class="8">fe 80 00 00 00 00 00 00  9a 03 9b ff fe ab cd ef</tspan>  |<tspan class="8">................</tspan>|
+00000020  <tspan class="9">98 03 9b ab cd ef</tspan> <tspan class="10">00 00</tspan>  <tspan class="12">00 00 00 00 00</tspan> 00 00 <tspan class="13">01</tspan>  |<tspan class="9">......</tspan><tspan class="10">..</tspan><tspan class="12">....</tspan>..<tspan class="13">..</tspan>|
+00000030  <tspan class="14">00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 01</tspan>  |<tspan class="14">................</tspan>|
+00000040  <tspan class="14">80</tspan> <tspan class="1">e2 d4 c3 d9</tspan>                                    |<tspan class="14">.</tspan><tspan class="1">....</tspan>|</text>
 
 <!-- script for highlighting -->
 <script type="text/javascript">
@@ -63,7 +67,4 @@ mouseOverByClass("14", "highlight")
 ]]>
 </script>
 
-</body>
-</foreignobject>
-<!-- end of xhtml content -->
 </svg>
