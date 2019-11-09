@@ -86,20 +86,20 @@ Trailer: SMC-R
 
 ### Example Packet Dumps with Highlighting
 
-This folder contains example packet dumps of CLC handshake messages with
-highlighting of the fields and bytes in the messages. The highlighting is
-realized as a mouseover effect.
+The folder [examples](examples/) contains example packet dumps of CLC handshake
+messages with highlighting of the fields and bytes in the messages.  The
+highlighting is realized as a mouseover effect.
 
 Note: Open the dumps in a web browser to see the highlighting mouseover effect.
 
 SMC-R CLC handshake messages over IPv4 on the loopback device:
-* CLC Proposal: [lo-proposal-smcr-ipv4.html](lo-proposal-smcr-ipv4.html)
-* CLC Accept: [lo-accept-smcr-ipv4.html](lo-accept-smcr-ipv4.html)
-* CLC Confirm: [lo-confirm-smcr-ipv4.html](lo-confirm-smcr-ipv4.html)
-* CLC Decline: [lo-decline-smcr-ipv4.html](lo-decline-smcr-ipv4.html)
+* [CLC Proposal](examples/lo-proposal-smcr-ipv4.html)
+* [CLC Accept](examples/lo-accept-smcr-ipv4.html)
+* [CLC Confirm](examples/lo-confirm-smcr-ipv4.html)
+* [CLC Decline](examples/lo-decline-smcr-ipv4.html)
 
 SMC-R CLC handshake messages over IPv6 on the loopback device:
-* CLC Proposal: [lo-proposal-smcr-ipv6.html](lo-proposal-smcr-ipv6.html)
-* CLC Accept: [lo-accept-smcr-ipv6.html](lo-accept-smcr-ipv6.html)
-* CLC Confirm: [lo-confirm-smcr-ipv6.html](lo-confirm-smcr-ipv6.html)
-* CLC Decline: [lo-decline-smcr-ipv6.html](lo-decline-smcr-ipv6.html)
+* [CLC Proposal](examples/lo-proposal-smcr-ipv6.html)
+* [CLC Accept](examples/lo-accept-smcr-ipv6.html)
+* [CLC Confirm](examples/lo-confirm-smcr-ipv6.html)
+* [CLC Decline](examples/lo-decline-smcr-ipv6.html)
