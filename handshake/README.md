@@ -1,6 +1,20 @@
 # Handshake
 
-## CLC Messages
+## TCP Handshake
+
+When establishing a TCP connection, SMC capable peers indicate their
+willingness to use SMC for this connection with an experimental TCP option in
+the SYN and SYN/ACK packets.
+
+SMC's Experimental TCP Option:
+* Kind: 254 (experimental option)
+* Length: 6 bytes
+* ExID: 0xE2D4C3D9 ("SMCR" in EBCDIC/IBM-1047 encoding)
+
+If both peers sent this option during the connection establishment, they
+perform a CLC handshake over the established TCP connection.
+
+## CLC Handshake
 
 ### Proposal
 
