@@ -70,6 +70,15 @@ Configure the RoCE net device (SMC-R only):
 After the previous steps, the RoCE IB device should also be ready to use. ISM
 devices do not need extra configuration.
 
+## Pnetid Configuration
+
+SMC uses a so-called Physical Network ID (pnetid) to map a handshake device to
+a RoCE IB device or to an ISM device. Thus, you need to make sure that your
+handshake device and your RoCE IB device or your ISM device have the same
+pnetid. You can use the tool [pnetctl](https://github.com/hwipl/pnetctl) to
+read the currently configured pnetids and to configure the pnetids of your
+devices.
+
 ## SMC Socket Programming
 
 See the folder [socket](socket/) for information on SMC socket programming.
