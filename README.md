@@ -32,6 +32,26 @@ or with the `smc.sh` script:
 # ./smc.sh load
 ```
 
+## Devices
+
+SMC requires, depending on the SMC variant, a different set of devices:
+
+SMC-R uses three devices: a *handshake device*, a *RoCE IB device*, and a *RoCE
+net device*. The handshake device is a network interface (e.g., `eth0`) used
+for the initial TCP connection setup and CLC handshake (see below) between two
+SMC peers. For example, a SMC server socket application listens on this device.
+The RoCE IB device is a RDMA over Converged Ethernet (RoCE) Infiniband (IB)
+device used to transfer the SMC-R traffic after the SMC connection has been
+established. The RoCE IB device transfers the traffic over an Ethernet device.
+This Ethernet device is the RoCE net device. The handshake device and RoCE net
+device can be the same device.
+
+SMC-D uses two devices: a *handshake device* and an *ISM device*. The handshake
+device is the same as in the case of SMC-R. The ISM device is an Internal
+Shared Memory (ISM) device that is used to transfer the SMC-D traffic after the
+SMC connection has been established. ISM devices are only available on the s390
+architecture.
+
 ## SMC Socket Programming
 
 See the folder [socket](socket/) for information on SMC socket programming.
