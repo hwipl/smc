@@ -52,6 +52,24 @@ Shared Memory (ISM) device that is used to transfer the SMC-D traffic after the
 SMC connection has been established. ISM devices are only available on the s390
 architecture.
 
+## Device Configuration
+
+In order to use SMC, the devices that are used for a SMC connection need to be
+configured.
+
+Configure the handshake device (SMC-R and SMC-D):
+* make sure the network interface is up
+* if you use VLAN, configure the right VLAN on the network interface
+* Configure your IPv4 and/or IPv6 address(es) on the network interface
+
+Configure the RoCE net device (SMC-R only):
+* make sure the network interface is up
+* if you use VLAN, configure the right VLAN on the network interface
+* configure an IPv6 address on the network interface
+
+After the previous steps, the RoCE IB device should also be ready to use. ISM
+devices do not need extra configuration.
+
 ## SMC Socket Programming
 
 See the folder [socket](socket/) for information on SMC socket programming.
