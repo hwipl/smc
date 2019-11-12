@@ -16,6 +16,22 @@ perform a CLC handshake over the established TCP connection.
 
 ## CLC Handshake
 
+During the CLC handshake, SMC peers exchange parameters that are required to
+establish a SMC-R connection over a RoCE IB device or a SMC-D connection over
+an ISM device.
+
+The regular CLC handshake is a three-way handshake that consists of the
+following messages:
+* Proposal
+* Accept
+* Confirm
+
+In case of errors during the handshake, an additional message is used to abort
+the SMC connection setup:
+* Decline
+
+See the following sections for more info on these messages.
+
 ### Proposal
 
 SMC-R IPv4 example:
