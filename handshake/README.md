@@ -97,9 +97,9 @@ IPv6 Prefix: ::1/128, Trailer: SMC-R
 ### Accept
 
 With a CLC Accept message, the server accepts the client's proposal and, if
-multiple SMC variants were given by the client, selects a either SMC-R or
-SMC-D. Also, the server provides additional information for the SMC connection
-setup. The format of the Accept message depends on the selected SMC variant.
+multiple SMC variants were given by the client, selects either SMC-R or SMC-D.
+Also, the server provides additional information for the SMC connection setup.
+The format of the Accept message depends on the selected SMC variant.
 
 SMC-R CLC Accept Message:
 * Eyecatcher: "SMCR" in EBCDIC/IBM-1047 encoding
