@@ -1,5 +1,10 @@
 # Handshake
 
+This page contains information gathered from
+[RFC7609](https://tools.ietf.org/html/rfc7609) and the [SMC implementation in
+the Linux kernel](https://github.com/torvalds/linux/tree/master/net/smc) about
+the TCP and CLC handshakes during the SMC connection setup.
+
 ## TCP Handshake
 
 When establishing a TCP connection, SMC capable peers indicate their
