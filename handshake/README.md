@@ -35,7 +35,10 @@ In case of errors during the handshake, an additional message is used to abort
 the SMC connection setup:
 * Decline
 
-See the following sections for more info on these messages.
+See [RFC7609](https://tools.ietf.org/html/rfc7609) and the following sections
+for more info on these messages. Also, you can use the tool
+[smc-clc](https://github.com/hwipl/smc-clc) to capture and show CLC handshakes
+including all these messages on a network interface.
 
 ### Proposal
 
