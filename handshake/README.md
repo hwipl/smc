@@ -42,6 +42,27 @@ including all these messages on a network interface.
 
 ### Proposal
 
+With a CLC Proposal message, the client signals to the server the willingness
+to use SMC-R, SMC-D or both for this connection. So, the message contains
+information that helps the server to determine if a SMC connection is possible.
+
+CLC proposal message:
+* Eyecatcher: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
+* Type: Proposal
+* Length: variable
+* Version: 1
+* Path: SMC-R or SMC-D or both
+* Client's Peer ID
+* Client's preferred SMC-R GID
+* Client's preferred RoCE MAC
+* IP Area Offset
+* Client's SMC-D GID (optional, in "Area for future growth", indicated by IP
+  Area Offset)
+* Client's IPv4 Prefix
+* IPv6 Prefix Count
+* Client's IPv6 Prefix(es) (optional, depending on IPv6 Prefix Count)
+* Trailer: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
+
 SMC-R IPv4 example:
 
 ```
