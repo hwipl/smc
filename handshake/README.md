@@ -54,7 +54,7 @@ CLC proposal message:
 * Path: SMC-R or SMC-D or both
 * Client's Peer ID
 * Client's preferred SMC-R GID
-* Client's preferred RoCE MAC
+* Client's preferred RoCE MAC address
 * IP Area Offset
 * Client's SMC-D GID (optional, in "Area for future growth", indicated by IP
   Area Offset)
@@ -96,7 +96,48 @@ IPv6 Prefix: ::1/128, Trailer: SMC-R
 
 ### Accept
 
-SMC-R IPv4 example:
+With a CLC Accept message, the server accepts the client's proposal and, if
+multiple SMC variants were given by the client, selects a either SMC-R or
+SMC-D. Also, the server provides additional information for the SMC connection
+setup. The format of the Accept message depends on the selected SMC variant.
+
+SMC-R CLC Accept Message:
+* Eyecatcher: "SMCR" in EBCDIC/IBM-1047 encoding
+* Type: 2 (Proposal)
+* Length: 68
+* Version: 1
+* First Contact Flag
+* Path: SMC-R
+* Server's Peer ID
+* Server's SMC-R GID
+* Server's RoCE MAC address
+* Server's QP number
+* Server's RMB RKey
+* Server's RMB element index
+* Server's RMB element alert token
+* Server's RMB element buffer size
+* Server's QP MTU size
+* Server's RMB virtual address
+* Server's initial packet sequence number
+* Trailer: "SMCR" in EBCDIC/IBM-1047 encoding
+
+SMC-D CLC Accept Message:
+* Eyecatcher: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
+* Type: 2 (Proposal)
+* Length: 48
+* Version: 1
+* First Contact Flag
+* Path: SMC-D
+* Server's SMC-D GID
+* Server's SMC-D Token
+* Server's DMB element index
+* Server's DMB element buffer size
+* Link identifier
+* Trailer: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
+
+
+SMC-R IPv4 example with hex dump
+([html with highlighting](examples/lo-accept-smcr-ipv4.html)):
 
 ```
 127.0.0.1:50000 -> 127.0.0.1:60294: Accept: Eyecatcher: SMC-R,
