@@ -48,7 +48,7 @@ information that helps the server to determine if a SMC connection is possible.
 
 CLC proposal message:
 * Eyecatcher: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
-* Type: Proposal
+* Type: 1 (Proposal)
 * Length: variable
 * Version: 1
 * Path: SMC-R or SMC-D or both
@@ -63,7 +63,8 @@ CLC proposal message:
 * Client's IPv6 Prefix(es) (optional, depending on IPv6 Prefix Count)
 * Trailer: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
 
-SMC-R IPv4 example:
+SMC-R IPv4 example with hex dump
+([html with highlighting](examples/lo-proposal-smcr-ipv4.html)):
 
 ```
 127.0.0.1:60294 -> 127.0.0.1:50000: Proposal: Eyecatcher: SMC-R,
@@ -77,7 +78,8 @@ IPv4 Prefix: 127.0.0.0/8, IPv6 Prefix Count: 0, Trailer: SMC-R
 00000030  e2 d4 c3 d9                                       |....|
 ```
 
-SMC-R IPv6 example:
+SMC-R IPv6 example with hex dump
+([html with highlighting](examples/lo-proposal-smcr-ipv6.html)):
 
 ```
 ::1:33186 -> ::1:50000: Proposal: Eyecatcher: SMC-R, Type: 1 (Proposal),
