@@ -103,7 +103,7 @@ The format of the Accept message depends on the selected SMC variant.
 
 SMC-R CLC Accept Message:
 * Eyecatcher: "SMCR" in EBCDIC/IBM-1047 encoding
-* Type: 2 (Proposal)
+* Type: 2 (Accept)
 * Length: 68
 * Version: 1
 * First Contact Flag
@@ -123,7 +123,7 @@ SMC-R CLC Accept Message:
 
 SMC-D CLC Accept Message:
 * Eyecatcher: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
-* Type: 2 (Proposal)
+* Type: 2 (Accept)
 * Length: 48
 * Version: 1
 * First Contact Flag
