@@ -193,7 +193,8 @@ SMC-D CLC Confirm Message:
 * Link identifier
 * Trailer: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
 
-SMC-R IPv4 example:
+SMC-R IPv4 example with hex dump
+([html with highlighting](examples/lo-confirm-smcr-ipv4.html)):
 
 ```
 127.0.0.1:60294 -> 127.0.0.1:50000: Confirm: Eyecatcher: SMC-R,
