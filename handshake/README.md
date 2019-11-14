@@ -156,6 +156,43 @@ Trailer: SMC-R
 
 ### Confirm
 
+With a CLC Confirm message, the client confirms the server's Accept message and
+selected SMC variant. The client provides additional information for the SMC
+connection setup. Like the Accept Message, the Confirm message's format depends
+on the SMC variant.
+
+SMC-R CLC Confirm Message:
+* Eyecatcher: "SMCR" in EBCDIC/IBM-1047 encoding
+* Type: 3 (Confirm)
+* Length: 68
+* Version: 1
+* Path: SMC-R
+* Client's Peer ID
+* Client's SMC-R GID
+* Client's RoCE MAC address
+* Client's QP number
+* Client's RMB RKey
+* Client's RMB element index
+* Client's RMB element alert token
+* Client's RMB element buffer size
+* Client's QP MTU size
+* Client's RMB virtual address
+* Client's initial packet sequence number
+* Trailer: "SMCR" in EBCDIC/IBM-1047 encoding
+
+SMC-D CLC Confirm Message:
+* Eyecatcher: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
+* Type: 3 (Confirm)
+* Length: 48
+* Version: 1
+* Path: SMC-D
+* Client's SMC-D GID
+* Client's SMC-D Token
+* Client's DMB element index
+* Client's DMB element buffer size
+* Link identifier
+* Trailer: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
+
 SMC-R IPv4 example:
 
 ```
