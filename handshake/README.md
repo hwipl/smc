@@ -213,7 +213,24 @@ Trailer: SMC-R
 
 ### Decline
 
-SMC-R IPv4 example:
+With a CLC Decline message, the client or the server signals an error during
+the connection setup to its peer. In this case, both peers can abort the SMC
+connection setup and fall back to using the existing TCP connection for their
+data transfer.
+
+CLC Decline Message:
+* Eyecatcher: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
+* Type: 4 (Decline)
+* Length: 28
+* Version: 1
+* Out of Sync Flag
+* Path: SMC-R or SMC-D
+* Client's or Server's Peer ID
+* Peer Diagnosis Information
+* Trailer: "SMCR" or "SMCD" in EBCDIC/IBM-1047 encoding
+
+SMC-R IPv4 example with hex dump
+([html with highlighting](examples/lo-decline-smcr-ipv4.html)):
 
 ```
 127.0.0.1:36140 -> 127.0.0.1:50000: Decline: Eyecatcher: SMC-R,
