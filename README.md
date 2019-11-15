@@ -70,6 +70,18 @@ Configure the RoCE net device (SMC-R only):
 After the previous steps, the RoCE IB device should also be ready to use. ISM
 devices do not need extra configuration.
 
+Example with handshake device `eth0` and RoCE net device `eth1`, without VLAN,
+with IP address `192.168.1.23` on the handshake device, and with IPv6 stateless
+address autoconfiguration:
+
+```console
+# # configure handshake device eth0:
+# ip link set eth0 up
+# ip address add 192.168.1.23/24 dev eth0
+# # configure RoCE net device eth1:
+# ip link set eth1 up
+```
+
 ## Pnetid Configuration
 
 SMC uses a so-called Physical Network ID (pnetid) to map a handshake device to
