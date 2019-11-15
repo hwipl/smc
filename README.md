@@ -52,6 +52,29 @@ Shared Memory (ISM) device that is used to transfer the SMC-D traffic after the
 SMC connection has been established. ISM devices are only available on the s390
 architecture.
 
+You can use the tool [pnetctl](https://github.com/hwipl/pnetctl) to show the
+net, IB, and ISM devices that are available on your host. Also, you can use it
+to identify the RoCE net device that belongs to a RoCE IB device. For example:
+
+```console
+# pnetctl
+====================================================================
+Pnetid:          Type:           Name:  Port:  Bus:          Bus-ID:
+====================================================================
+n/a
+--------------------------------------------------------------------
+                   net            eth1          pci     0000:03:00.0
+                   net            eth0          pci     0000:01:00.0
+                   net              lo          n/a              n/a
+                    ib          mlx5_0      1   pci     0000:03:00.0
+```
+
+This example shows four devices without a pnetid (see below). The IB device
+`mlx5_0` is a RoCE IB device and has the bus type `pci` and the bus-id
+`0000:03:00.0`. The net device `eth1` has the same bus and bus-id. Thus, you
+can assume that `eth1` is the RoCE net device that belongs to the RoCE IB
+device `mlx5_0`.
+
 ## Device Configuration
 
 In order to use SMC, the devices that are used for a SMC connection need to be
