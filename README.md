@@ -114,6 +114,55 @@ pnetid. You can use the tool [pnetctl](https://github.com/hwipl/pnetctl) to
 read the currently configured pnetids and to configure the pnetids of your
 devices.
 
+You can view the available devices and their pnetids by running `pnetctl`
+without command line parameters:
+
+```console
+# pnetctl
+====================================================================
+Pnetid:          Type:           Name:  Port:  Bus:          Bus-ID:
+====================================================================
+n/a
+--------------------------------------------------------------------
+                   net            eth1          pci     0000:03:00.0
+                   net            eth0          pci     0000:01:00.0
+                   net              lo          n/a              n/a
+                    ib          mlx5_0      1   pci     0000:03:00.0
+```
+
+In this example, no pnetids are currently configured as indicated by all
+devices listed under the pnetid `n/a`.
+
+In this example, you can add a pnetid to devices `eth1` and `mlx5_0` by using
+the `-a`, `-i` and `-n` command line arguments:
+
+```console
+# pnetctl -a test1 -i mlx5_0 -n eth1
+```
+
+After this command, the pnetid configuration should look like this:
+
+```console
+# pnetctl
+====================================================================
+Pnetid:          Type:           Name:  Port:  Bus:          Bus-ID:
+====================================================================
+TEST1
+--------------------------------------------------------------------
+                   net            eth1          pci     0000:03:00.0
+                    ib          mlx5_0      1   pci     0000:03:00.0
+--------------------------------------------------------------------
+n/a
+--------------------------------------------------------------------
+                   net            eth0          pci     0000:01:00.0
+                   net              lo          n/a              n/a
+```
+
+The two devices `eth1` and `mlx5_0` are now listed under pnetid `TEST1`. Note:
+pnetids are capitalized when they are stored in the kernel. Also, pnetids that
+are configured with pnetctl are only temporary and do not persist across
+reboots.
+
 ## SMC Socket Programming
 
 See the folder [socket](socket/) for information on SMC socket programming.
