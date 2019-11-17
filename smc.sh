@@ -6,6 +6,8 @@ CMD=$1
 USAGE="Usage:
     $0 check
     $0 load
+    $0 ib ls|list
+    $0 ib state <ib_dev>
     $0 rxe load
     $0 rxe add <net_dev>
     $0 rxe del <rxe_dev>"
@@ -58,6 +60,35 @@ function run_rxe {
 	esac
 }
 
+# run infiniband commands
+function run_ib {
+	ib_path=/sys/class/infiniband
+	cmd=$1
+	dev=$2
+
+	case "$cmd" in
+		"ls"|"list")
+			echo "Infiniband devices:"
+			ls $ib_path
+			;;
+		"state")
+			if [ -z "$dev" ]; then
+				echo "$USAGE"
+				return
+			fi
+			echo "State of infiniband device $dev:"
+			for i in "$ib_path/$dev"/ports/*; do
+				[[ -e "$i" ]] || break
+				echo -n "Port ${i##*/} State: "
+				cat "$i/state"
+			done
+			;;
+		*)
+			echo "$USAGE"
+			;;
+	esac
+}
+
 # run commands with other command line arguments
 case "$CMD" in
 	"check")
@@ -68,6 +99,9 @@ case "$CMD" in
 		;;
 	"rxe")
 		run_rxe "$2" "$3"
+		;;
+	"ib")
+		run_ib "$2" "$3"
 		;;
 	*)
 		echo "$USAGE"
