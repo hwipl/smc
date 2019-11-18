@@ -90,12 +90,25 @@ Configure the RoCE net device (SMC-R only):
 * if you use VLAN, configure the right VLAN on the network interface
 * configure an IPv6 address on the network interface
 
-After the previous steps, the RoCE IB device should also be ready to use. ISM
-devices do not need extra configuration.
+After the previous steps, the RoCE IB device should also be ready to use (i.e.
+active). There are multiple ways to check if the RoCE IB device is active. For
+example, you can use the tool `ibstat` from
+[rdma-core](https://github.com/linux-rdma/rdma-core), or you can read the
+respective sysfs attribute with `cat
+/sys/class/infiniband/<ib_device>/ports/<ib_port>/state`, or you can simply use
+the `smc.sh` script in this folder:
 
-Example with handshake device `eth0` and RoCE net device `eth1`, without VLAN,
-with IP address `192.168.1.23` on the handshake device, and with IPv6 stateless
-address autoconfiguration:
+```console
+$ ./smc.sh ib state <ib_device>
+```
+
+ISM devices do not need extra configuration.
+
+### Examples
+
+Example of the device configuration with handshake device `eth0` and RoCE net
+device `eth1`, without VLAN, with IP address `192.168.1.23` on the handshake
+device, and with IPv6 stateless address autoconfiguration:
 
 ```console
 # # configure handshake device eth0:
@@ -103,6 +116,15 @@ address autoconfiguration:
 # ip address add 192.168.1.23/24 dev eth0
 # # configure RoCE net device eth1:
 # ip link set eth1 up
+```
+
+Example of checking the state of the RoCE IB device `mlx5_0` with the `smc.sh`
+script:
+
+```console
+$ ./smc.sh ib state mlx5_0
+State of infiniband device mlx5_0:
+Port 1 State: 4: ACTIVE
 ```
 
 ## Pnetid Configuration
